@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "WebSearch"
+      "WebSearch",
+      "Bash(git -C /c/dev-tools/github/ROE log --oneline -20)",
+      "Bash(git -C /c/dev-tools/github/ROE log --format=\"%h %s\" -10)",
+      "Bash(git -C /c/dev-tools/github/ROE show --stat 1ee01f5)",
+      "Bash(git -C /c/dev-tools/github/ROE config user.name)",
+      "Bash(xargs wc:*)",
+      "Bash(wc -l /c/dev-tools/github/ROE/scripts/* /c/dev-tools/github/ROE/Makefile /c/dev-tools/github/ROE/gitignore /c/dev-tools/github/ROE/.github/copilot-instructions.md)",
+      "Bash(xargs head:*)"
     ]
   }
 }

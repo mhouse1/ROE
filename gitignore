@@ -13,3 +13,6 @@ Thumbs.db
 
 # Test output
 tests/test-output/
+
+# Local-only documents
+ignore/
