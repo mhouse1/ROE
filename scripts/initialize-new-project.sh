@@ -14,7 +14,7 @@ if [[ $# -lt 1 ]]; then
 fi
 
 PROJECT_NAME="$1"
-TARGET_DIR="$ROE_ROOT/test-output/$PROJECT_NAME"
+TARGET_DIR="$ROE_ROOT/tests/test-output/$PROJECT_NAME"
 
 if [[ -e "$TARGET_DIR" ]]; then
   echo "error: '$TARGET_DIR' already exists" >&2
@@ -37,6 +37,10 @@ for dir in adr job-aid performance code-review; do
 done
 
 ROE_VERSION=$(cat "$ROE_ROOT/VERSION")
+PROJECT_VERSION="0.0.1"
+
+# --- create VERSION early so other steps can reference it ---
+printf "%s\n# Initial Version\n" "$PROJECT_VERSION" > "$TARGET_DIR/VERSION"
 
 # --- copy ROE files ---
 cp "$ROE_ROOT/CLAUDE.md"                             "$TARGET_DIR/CLAUDE.md"
@@ -46,8 +50,8 @@ awk '
   /Custom user-defined commands/ { exit }
   /^r:/                          { skip=1; next }
   skip && /^\t/                  { next }
-  skip                           { skip=0 }
-  /^\.PHONY:/                    { gsub(/ r /, " ") }
+  skip                           { skip=0; next }
+  /^\.PHONY:/                    { gsub(/ r /, " "); gsub(/ test/, "") }
   { print }
 ' "$ROE_ROOT/Makefile" > "$TARGET_DIR/Makefile"
 cat >> "$TARGET_DIR/Makefile" <<'MAKEFILE_CUSTOM'
@@ -56,12 +60,27 @@ cat >> "$TARGET_DIR/Makefile" <<'MAKEFILE_CUSTOM'
 # Custom user-defined commands
 # Add your own targets below this line.
 # -----------------------------------------------------------------------------
+
+.PHONY: r
+
+r:
+	@echo "This is project specific, you'll have to define this yourself"
 MAKEFILE_CUSTOM
 cp "$ROE_ROOT/gitignore"                             "$TARGET_DIR/.gitignore"
 cp "$ROE_ROOT/.github/copilot-instructions.md"       "$TARGET_DIR/.github/copilot-instructions.md"
+cp "$ROE_ROOT/docs/assets/CONTRIBUTING_generic.md"   "$TARGET_DIR/CONTRIBUTING.md"
 
 # stamp which ROE version this project was scaffolded from
 printf "roe_version=%s\ndate=%s\n" "$ROE_VERSION" "$(date +%Y-%m-%d)" > "$TARGET_DIR/.roe-version"
+
+# --- starter ARCHITECTURE ---
+cat > "$TARGET_DIR/docs/ARCHITECTURE.md" <<EOF
+# Architecture
+
+| Status | Date       | Project Version |
+|--------|------------|-----------------|
+| Draft  | $(date +%Y-%m-%d) | $PROJECT_VERSION     |
+EOF
 
 # --- starter README ---
 cat > "$TARGET_DIR/README.md" <<EOF

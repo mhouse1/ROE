@@ -6,7 +6,7 @@ SHELL := /bin/bash
 # Every keystroke saved compounds. Shift is effort. Brevity is the convention.
 # -----------------------------------------------------------------------------
 
-.PHONY: c d f n p r s squash t
+.PHONY: c d f n p r s squash t test
 
 c:
 	git add .
@@ -29,7 +29,9 @@ p:
 	git push
 
 r:
+	@rm -rf tests/test-output
 	@read -p "Project name: " name && bash scripts/initialize-new-project.sh "$$name"
+	$(MAKE) test
 
 s:
 	git status
@@ -41,7 +43,10 @@ t:
 	git add .
 	git commit -am "temporary commit"
 
+
 # -----------------------------------------------------------------------------
 # Custom user-defined commands
 # Add your own targets below this line.
 # -----------------------------------------------------------------------------
+test:
+	bash tests/test-scaffold.sh

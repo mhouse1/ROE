@@ -12,7 +12,7 @@ Thumbs.db
 *.log
 
 # Test output
-test-output/
+tests/test-output/
 
 # Local-only documents
 ignore/
