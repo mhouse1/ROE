@@ -14,6 +14,8 @@ ROE is a meta-project: it is not software that does something. It scaffolds othe
 
 ## Quickstart
 
+> **Work in progress** — commands and targets are still being defined.
+
 Bootstrap a new project with the ROE structure:
 
 ```bash
@@ -21,6 +23,8 @@ make r
 ```
 
 ## Makefile Commands
+
+> **Work in progress** — commands and targets are still being defined.
 
 Commands are intentionally short — you will type them constantly.
 
