@@ -11,3 +11,10 @@
 # if the project doesnt already use ROE, maybe ask for user confirmation before 
 # applying changes, and be extra careful to not mess with existing files
 # maybe we can also have a "dry run" mode that shows what changes would be made
+
+
+# Auto update the ARCHITECTURE.md file with the new structure, and create a code-review doc that 
+# explains the changes made and how to adapt to them. This would be a great way to help developers 
+# understand the new structure and how to work with it.
+# AI Agent Command: 
+# perform an indepth review of this project, update ARCHITECTURE.md and create a code-review doc
