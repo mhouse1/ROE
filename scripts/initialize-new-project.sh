@@ -40,11 +40,23 @@ ROE_VERSION=$(cat "$ROE_ROOT/VERSION")
 
 # --- copy ROE files ---
 cp "$ROE_ROOT/CLAUDE.md"                             "$TARGET_DIR/CLAUDE.md"
-# Copy Makefile, stripping the r target (new projects have no scripts/ directory)
-grep -v "^r:" "$ROE_ROOT/Makefile" \
-  | grep -v "initialize-new-project" \
-  | sed 's/^\.PHONY: r /\.PHONY: /' \
-  > "$TARGET_DIR/Makefile"
+# Copy Makefile: keep only the standard commands section, strip the r target,
+# then append a clean custom commands section for the new project.
+awk '
+  /Custom user-defined commands/ { exit }
+  /^r:/                          { skip=1; next }
+  skip && /^\t/                  { next }
+  skip                           { skip=0 }
+  /^\.PHONY:/                    { gsub(/ r /, " ") }
+  { print }
+' "$ROE_ROOT/Makefile" > "$TARGET_DIR/Makefile"
+cat >> "$TARGET_DIR/Makefile" <<'MAKEFILE_CUSTOM'
+
+# -----------------------------------------------------------------------------
+# Custom user-defined commands
+# Add your own targets below this line.
+# -----------------------------------------------------------------------------
+MAKEFILE_CUSTOM
 cp "$ROE_ROOT/gitignore"                             "$TARGET_DIR/.gitignore"
 cp "$ROE_ROOT/.github/copilot-instructions.md"       "$TARGET_DIR/.github/copilot-instructions.md"
 
