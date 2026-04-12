@@ -27,12 +27,15 @@ echo "Creating project '$PROJECT_NAME' at $TARGET_DIR"
 mkdir -p \
   "$TARGET_DIR/.github" \
   "$TARGET_DIR/docs/adr" \
+  "$TARGET_DIR/docs/hldd" \
   "$TARGET_DIR/docs/job-aid" \
   "$TARGET_DIR/docs/performance" \
-  "$TARGET_DIR/docs/code-review"
+  "$TARGET_DIR/docs/review" \
+  "$TARGET_DIR/docs/roadmap" \
+  "$TARGET_DIR/docs/workflow"
 
 # keep empty docs dirs tracked by git
-for dir in adr job-aid performance code-review; do
+for dir in adr hldd job-aid performance review roadmap workflow; do
   touch "$TARGET_DIR/docs/$dir/.gitkeep"
 done
 
