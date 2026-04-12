@@ -14,7 +14,7 @@ if [[ $# -lt 1 ]]; then
 fi
 
 PROJECT_NAME="$1"
-TARGET_DIR="$(dirname "$ROE_ROOT")/$PROJECT_NAME"
+TARGET_DIR="$ROE_ROOT/test-output/$PROJECT_NAME"
 
 if [[ -e "$TARGET_DIR" ]]; then
   echo "error: '$TARGET_DIR' already exists" >&2
