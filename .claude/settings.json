@@ -12,7 +12,11 @@
       "Bash(git -C c:/dev-tools/github/ROE check-ignore -v ignore/interview-strategy.md)",
       "Bash(git -C c:/dev-tools/github/ROE ls-files ignore/)",
       "Bash(git -C c:/dev-tools/github/ROE rm --cached ignore/project-assessment.md)",
-      "Bash(git -C c:/dev-tools/github/ROE status)"
+      "Bash(git -C c:/dev-tools/github/ROE status)",
+      "Read(//c/Users/micha/.claude/projects/c--dev-tools-github-ROE/memory/**)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\micha\\.claude\\projects\\c--dev-tools-github-ROE\\memory"
     ]
   }
 }
