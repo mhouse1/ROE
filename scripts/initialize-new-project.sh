@@ -50,6 +50,7 @@ printf "%s\n# Initial Version\n" "$PROJECT_VERSION" > "$TARGET_DIR/VERSION"
 
 # --- copy ROE files ---
 cp "$ROE_ROOT/CLAUDE.md"                             "$TARGET_DIR/CLAUDE.md"
+cp "$ROE_ROOT/AGENTS.md"                             "$TARGET_DIR/AGENTS.md"
 # Copy Makefile: keep only the standard commands section, strip the r target,
 # then append a clean custom commands section for the new project.
 awk '

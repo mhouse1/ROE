@@ -33,6 +33,13 @@ trap cleanup EXIT
 echo "Running scaffold tests..."
 bash "$SCRIPT" "$TEST_PROJECT" > /dev/null
 
+# AGENTS.md must exist
+if [[ -f "$TARGET_DIR/AGENTS.md" ]]; then
+  check "AGENTS.md exists" "ok"
+else
+  check "AGENTS.md exists" "file not found"
+fi
+
 # ARCHITECTURE.md line count must not exceed 6
 arch_file="$TARGET_DIR/docs/ARCHITECTURE.md"
 arch_lines=$(wc -l < "$arch_file")
