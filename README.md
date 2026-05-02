@@ -48,7 +48,7 @@ All documentation lives under `docs/`. Subdirectories are created as needed — 
 | `docs/adr/` | Architecture Decision Records |
 | `docs/job-aid/` | Step-by-step reference guides |
 | `docs/performance/` | Performance measurements and analysis |
-| `docs/review/` | Review cycle records |
+| `docs/code-review/` | Review cycle records |
 
 Every file in any `docs/` subdirectory gets a zero-padded three-digit prefix (`001-`, `002-`, …). See `CLAUDE.md` for the full numbering and heading format rules.
 

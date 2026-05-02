@@ -25,7 +25,7 @@ Every file created under any subdirectory of `docs/` must have a zero-padded thr
 
 Before creating a new file in any `docs/` subdirectory, list the existing files in that folder to find the highest number and increment by 1. Never guess or reuse a number — gaps and collisions break the sequence across sessions.
 
-This applies to: `docs/adr/`, `docs/job-aid/`, `docs/performance/`, `docs/review/`, `docs/roadmap/`, and any future subdirectory under `docs/`.
+This applies to: `docs/adr/`, `docs/job-aid/`, `docs/performance/`, `docs/code-review/`, `docs/roadmap/`, and any future subdirectory under `docs/`.
 
 
 ## ADR — Sequential Numbering
@@ -69,7 +69,7 @@ All new documents (job aids, performance docs, code reviews, ADRs, and any other
 
 ## Review Todos
 
-Review files live in `docs/review/` and are numbered sequentially (`001-YYYY-MM.md`, `002-…`, etc.). Each file covers one review cycle and is closed (immutable) once all items resolve.
+Review files live in `docs/code-review/` and are numbered sequentially (`001-YYYY-MM.md`, `002-…`, etc.). Each file covers one review cycle and is closed (immutable) once all items resolve.
 
 
 ## Roadmap — Planned Features

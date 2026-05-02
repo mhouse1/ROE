@@ -30,7 +30,7 @@ p:
 
 r:
 	@rm -rf tests/test-output
-	@read -p "Project name: " name && bash scripts/initialize-new-project.sh "$$name"
+	@read -p "Project name: " name && bash scripts/initialize-new-project.sh "$${name:-ROE_TEMPLATE_PROJECT}"
 	$(MAKE) test
 
 s:

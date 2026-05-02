@@ -30,14 +30,17 @@ mkdir -p \
   "$TARGET_DIR/docs/hldd" \
   "$TARGET_DIR/docs/job-aid" \
   "$TARGET_DIR/docs/performance" \
-  "$TARGET_DIR/docs/review" \
+  "$TARGET_DIR/docs/performance/logs" \
+  "$TARGET_DIR/docs/code-review" \
   "$TARGET_DIR/docs/roadmap" \
   "$TARGET_DIR/docs/workflow"
 
 # keep empty docs dirs tracked by git
-for dir in adr hldd job-aid performance review roadmap workflow; do
+for dir in adr hldd job-aid performance code-review roadmap workflow; do
   touch "$TARGET_DIR/docs/$dir/.gitkeep"
 done
+# keep logs dir tracked by git
+touch "$TARGET_DIR/docs/performance/logs/.gitkeep"
 
 ROE_VERSION=$(cat "$ROE_ROOT/VERSION")
 PROJECT_VERSION="0.0.1"

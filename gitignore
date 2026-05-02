@@ -10,6 +10,7 @@ Thumbs.db
 
 # Logs
 *.log
+docs/performance/logs/
 
 # Test output
 tests/test-output/
