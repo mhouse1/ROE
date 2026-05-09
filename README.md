@@ -8,7 +8,7 @@ Every design decision in ROE points to the same root cause: **project knowledge 
 
 Engineers leave. Decisions get relitigated. Systems go undocumented for years, then get handed to someone who has to reverse-engineer intent from code. ROE exists because the cost of that knowledge loss is real, and most of it is preventable with simple, consistent habits.
 
-The rules here are not clever. They are not innovative. They are the minimum structure needed to ensure that the next person — or the same person two years later — can understand what was built, why it was built that way, and what it will cost to change it.
+The rules here are not clever. They are not innovative. They are the minimum structure needed to ensure that the next person — or the same person years later — can understand what was built, why it was built that way, and what it will cost to change it.
 
 ROE is a meta-project: it is not software that does something. It scaffolds other projects so they inherit documentation structure, decision records, and AI integration from day one — before there is anything to lose.
 
