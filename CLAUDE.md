@@ -23,14 +23,14 @@ Every file created under any subdirectory of `docs/` must have a zero-padded thr
 002-another-document.md
 ```
 
-Before creating a new file in any `docs/` subdirectory, list the existing files in that folder to find the highest number and increment by 1. Never guess or reuse a number — gaps and collisions break the sequence across sessions.
+Before creating a new file in any `docs/` subdirectory, use the **Glob tool** to list existing files in that folder — do not use shell commands (PowerShell or Bash), which may return empty results silently on this platform. Find the highest number and increment by 1. Never guess or reuse a number — gaps and collisions break the sequence across sessions.
 
 This applies to: `docs/adr/`, `docs/job-aid/`, `docs/performance/`, `docs/code-review/`, `docs/roadmap/`, and any future subdirectory under `docs/`.
 
 
 ## ADR — Sequential Numbering
 
-The general sequential numbering rule above applies. Additionally: before creating a new ADR, list the files in `docs/adr/` to find the highest existing number and increment by 1.
+The general sequential numbering rule above applies. Additionally: before creating a new ADR, use the **Glob tool** to list the files in `docs/adr/` and find the highest existing number, then increment by 1.
 
 
 ## ADR — Performance Changes
@@ -67,9 +67,27 @@ All new documents (job aids, performance docs, code reviews, ADRs, and any other
 - This rule applies to **all** new docs, not just ADRs.
 
 
+## Architecture Documents (HLDD)
+
+Architecture documents live in `docs/hldd/`. Each file covers the high-level design for a system, subsystem, or feature.
+
+Files follow the standard sequential numbering rule: `001-component-name.md`, `002-…`, etc.
+
+Architecture documents must include the standard heading format with version and date — read the version from the `VERSION` file, never guess it. Use `Draft` status for new documents; update to `Active` once reviewed.
+
+
 ## Review Todos
 
 Review files live in `docs/code-review/` and are numbered sequentially (`001-YYYY-MM.md`, `002-…`, etc.). Each file covers one review cycle and is closed (immutable) once all items resolve.
+
+
+## Requirements Documents
+
+Requirements live in `docs/requirements/`. Each file covers a discrete requirement or requirement group for a system, subsystem, or feature.
+
+Files follow the standard sequential numbering rule: `001-requirement-name.md`, `002-…`, etc.
+
+Use `Draft` status for new requirements; update to `Active` once reviewed and baselined. If a requirement is obsoleted, update the status to `Obsolete` and note the reason — do not delete the file.
 
 
 ## Roadmap — Planned Features
