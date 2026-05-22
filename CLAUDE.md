@@ -47,6 +47,19 @@ Do not modify an ADR that has status `Accepted`. If a decision is superseded, wr
 
 Always use Mermaid for diagrams in documentation. Never use ASCII text diagrams (no box-drawing characters, no `┌─┐` borders, no `→` arrow art). Wrap all diagrams in a fenced code block with the `mermaid` language tag.
 
+Use a compatibility-first Mermaid profile for shared docs:
+
+- Default to syntax that renders across common Mermaid versions and renderers.
+- Keep node labels plain-language; do not put symbolic expressions (for example `>`, `<`, `<=`, `>=`, or punctuation-heavy logic) inside node declarations.
+- Put equations and conditions in nearby bullets or surrounding prose, not in decision-node text.
+
+Advanced Mermaid features must only be used when both conditions are met:
+
+1. The target renderer or pipeline version is known to support the feature.
+2. A simplified fallback diagram, or equivalent textual explanation, is provided for portability.
+
+After creating or editing Mermaid blocks, verify they render in the target environment, not only in one local preview.
+
 
 ## Document Heading Format
 
