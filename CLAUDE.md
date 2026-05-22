@@ -78,7 +78,17 @@ Architecture documents must include the standard heading format with version and
 
 ## Review Todos
 
-Review files live in `docs/code-review/` and are numbered sequentially (`001-YYYY-MM.md`, `002-…`, etc.). Each file covers one review cycle and is closed (immutable) once all items resolve.
+Review files live in `docs/code-review/` and are numbered sequentially (`001-YYYY-MM.md`, `002-…`, etc.). Each file covers one review cycle.
+
+Review-cycle files are immutable after closure. Do not edit a closed review to change findings, severity, or the narrative assessment.
+
+Allowed before closure:
+- Add a final resolution summary for items reviewed in that cycle.
+
+After closure:
+- Record later status changes in a new review-cycle file, not by rewriting the old file.
+- Reference the original item ID and mark the current disposition explicitly: `Resolved`, `Deferred`, `Superseded`, or `Closed as stale`.
+- Treat the newest review-cycle file that references the item as the authoritative current disposition.
 
 
 ## Requirements Documents
