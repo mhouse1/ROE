@@ -4,7 +4,7 @@
 |----------|------------|-----------------|
 | Draft    | 2026-05-09 | 1.0.1           |
 
-ROE (Rules Of Engagement) is a documentation and collaboration scaffold that applies consistent structure to any project — firmware, software, hardware, or otherwise. It is AI-native: the rules in `CLAUDE.md` are written so an AI agent (Claude Code, Copilot, or similar) can enforce and follow them without human reminders.
+ROE (Rules Of Engagement) is a documentation and collaboration scaffold that applies consistent structure to any project — firmware, software, hardware, or otherwise. It is AI-native: the rules in `AGENTS.md` are written so an AI agent (Claude Code, Copilot, or similar) can enforce and follow them without human reminders.
 
 ---
 
@@ -16,7 +16,7 @@ bash scripts/initialize-new-project.sh <project-name>
 
 This copies the scaffold into `../<project-name>/`, creating:
 
-- `CLAUDE.md` — canonical rules read by AI agents
+- `AGENTS.md` — canonical rules read by AI agents
 - `.github/copilot-instructions.md` — Copilot summary
 - `docs/` subdirectories (empty, ready for use)
 - `Makefile` with short-form git targets
@@ -36,7 +36,7 @@ rm -rf ../test-project
 
 The `scripts/apply-to-existing-project.sh` script is in progress (see inline comments for current status). For manual adoption:
 
-1. Copy `CLAUDE.md` into the project root.
+1. Copy `AGENTS.md` into the project root.
 2. Create the `docs/` folder structure (`adr/`, `job-aid/`, `roadmap/`, `code-review/`, `requirements/`, `performance/`).
 3. Retrofit pre-existing decisions as retroactive ADRs (use `Accepted` status).
 4. Copy the `Makefile` if the project does not have one, or merge the targets manually.
@@ -143,7 +143,7 @@ flowchart LR
 
 ## Configuration File
 
-Add `roe.config.json` to the repo root to tune agent behaviors without modifying `CLAUDE.md`. The file is optional — ROE runs with sensible defaults when absent. All settings can be changed at any time as the project evolves (e.g., flipping `local_project` when a repo goes public).
+Add `roe.config.json` to the repo root to tune agent behaviors without modifying `AGENTS.md`. The file is optional — ROE runs with sensible defaults when absent. All settings can be changed at any time as the project evolves (e.g., flipping `local_project` when a repo goes public).
 
 Key parameters:
 
@@ -175,7 +175,7 @@ ROE rules are loaded automatically by:
 
 | Agent | File read |
 |-------|-----------|
-| Claude Code | `CLAUDE.md` |
+| Claude Code / Codex | `AGENTS.md` |
 | GitHub Copilot | `.github/copilot-instructions.md` |
 
 Both files point to the same rules. Do not duplicate rule content in the agent files — summarize and link only. When adding a new AI integration, follow the same pattern.
@@ -184,6 +184,6 @@ Both files point to the same rules. Do not duplicate rule content in the agent f
 
 ## Rule Changes
 
-- **Minor clarification** (wording, examples): edit `CLAUDE.md` directly.
+- **Minor clarification** (wording, examples): edit `AGENTS.md` directly.
 - **Significant change** (new section, removal, intent change): write an ADR in `docs/adr/` first.
 - Rules must be actionable, system-agnostic, and self-contained — no language or toolchain assumptions unless explicitly scoped.

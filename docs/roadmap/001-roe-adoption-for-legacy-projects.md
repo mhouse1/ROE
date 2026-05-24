@@ -6,7 +6,7 @@
 
 ## Summary
 
-A structured process for applying the ROE conventions to existing or legacy projects that predate this repository. The goal is to bring an established project's documentation, code review, and decision history into alignment with the rules defined in CLAUDE.md without forcing a full historical rewrite.
+A structured process for applying the ROE conventions to existing or legacy projects that predate this repository. The goal is to bring an established project's documentation, code review, and decision history into alignment with the rules defined in AGENTS.md without forcing a full historical rewrite.
 
 ## Problem
 

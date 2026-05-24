@@ -2,13 +2,13 @@
 
 | Status   | Date       | Project Version |
 |----------|------------|-----------------|
-| Accepted | 2026-05-09 | 1.0.1           |
+| Draft | 2026-05-09 | 1.0.1           |
 
 ## Context
 
 ROE is used by contributors across different project types and with different workflows. Currently, AI-assisted behaviors (such as auto-reviewing new ADRs or triggering agent actions when implementing decisions) are either always-on or require manual invocation. There is no per-project or per-user way to tune which agent automations run and how they behave.
 
-A lightweight configuration file would let users opt into or out of specific behaviors without modifying the core rules or CLAUDE.md.
+A lightweight configuration file would let users opt into or out of specific behaviors without modifying the core rules or AGENTS.md.
 
 Project characteristics can also change after ROE is first applied — a repository that begins as a closed-source project may later be published or open-sourced. The configuration must support this kind of transition: settings should be adjustable at any point in the project lifecycle without requiring ROE to be re-applied or re-scaffolded.
 
@@ -48,6 +48,7 @@ The following parameters are in scope for initial consideration:
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
+| `enable_review_mode` | bool | `false` | Enables a restricted review-only execution mode. When `true`, review runs must: (1) only attempt command execution through Bash and `uv`, (2) auto-approve review actions that do not require additional user confirmation, and (3) never modify source files; output is limited to review artifacts (for example, under `docs/code-review/`) |
 | `default_review_scope` | string | `"branch"` | Scope of code reviews: `"branch"` (changes since main) or `"full"` (entire repo) |
 | `security_review_on_pr` | bool | `false` | Automatically run a security review pass on new PRs |
 | `review_output_dir` | string | `"docs/code-review"` | Where generated review documents are written |
@@ -65,6 +66,7 @@ The following parameters are in scope for initial consideration:
 {
   "open_source_project": true,
   "open_source_license": "MIT",
+  "enable_review_mode": true,
   "auto_review_on_adr_create": true,
   "adr_review_model": "sonnet",
   "require_adr_for_breaking_change": true,
@@ -129,12 +131,15 @@ Tests for this ADR live in `tests/` at the ROE repository root (`/github/ROE/tes
 - Invalid config: missing `roe.config.json` (or `roe.config.yaml`) must fail hard.
 - Runtime behavior: when `open_source_project: false` (explicit or default), remote publication targets are blocked with a clear error.
 - Runtime behavior: when `open_source_project: true`, open-source defaults can be applied without changing core ROE rules.
+- Runtime behavior: when `enable_review_mode: true`, review execution only attempts commands via Bash and `uv`.
+- Runtime behavior: when `enable_review_mode: true`, review actions are auto-approved where no extra confirmation is required.
+- Runtime behavior: when `enable_review_mode: true`, source files are never modified; only review outputs are written.
 
 Validation failure behavior for all invalid cases above: stop execution immediately and return a non-zero exit code.
 
 ## Alternatives Considered
 
-- **CLAUDE.md-only configuration:** Embedding behavior flags directly in CLAUDE.md is simpler but mixes rules (which are stable) with per-project tuning (which changes frequently). Keeping them separate avoids churn in the canonical rules file.
+- **AGENTS.md-only configuration:** Embedding behavior flags directly in AGENTS.md is simpler but mixes rules (which are stable) with per-project tuning (which changes frequently). Keeping them separate avoids churn in the canonical rules file.
 - **Environment variables only:** Suitable for CI overrides but not for persistent project-level defaults checked into the repo.
 - **No configuration (convention only):** Acceptable for a single-user or single-project tool, but ROE is intended as a reusable scaffold across project types. Configuration makes it adaptable without forking.
 
@@ -148,3 +153,4 @@ Validation failure behavior for all invalid cases above: stop execution immediat
 - Closed-source projects may operate under stricter security classifications. Tool permissions granted in open-source project configurations (for example, broad GitHub API access) should be reviewed and scoped down whenever `open_source_project` is not enabled.
 - The configuration is designed to be adjusted at any point in the project lifecycle — not just at initial setup. Changing `open_source_project` from `false` to `true` when a repo goes public takes effect immediately with no structural changes to the repository. Contributors should treat the config file as a living document that tracks the current state of the project, not a one-time scaffold choice.
 - When `open_source_project: true`, `open_source_license` must be set to one of `GPL`, `MIT`, or `Apache`; invalid values must fail hard with a clear error and a non-zero exit code.
+- When `enable_review_mode: true`, review automation is constrained to a non-mutating path: command attempts are limited to Bash and `uv`, actions are auto-approved within review flow, and source tree modifications are disallowed.

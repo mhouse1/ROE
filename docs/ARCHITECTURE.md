@@ -21,7 +21,7 @@ ROE is a meta-project. It does not build a runtime product. It defines repeatabl
 
 ```mermaid
 flowchart LR
-	A[Maintainer updates ROE] --> B[Rules in CLAUDE.md]
+	A[Maintainer updates ROE] --> B[Rules in AGENTS.md]
 	B --> C[Initialization scripts]
 	C --> D[New project scaffold]
 	D --> E[Engineers and AI agents]
@@ -32,8 +32,8 @@ flowchart LR
 
 ### 1) Governance Layer
 
-- `CLAUDE.md`: Source of truth for process and documentation rules.
-- `AGENTS.md` and `.github/copilot-instructions.md`: Redirect agent behavior to `CLAUDE.md`.
+- `AGENTS.md`: Source of truth for process and documentation rules.
+- `.github/copilot-instructions.md`: Points Copilot to `AGENTS.md`.
 - `VERSION`: Semantic version for the ROE framework itself.
 
 ### 2) Scaffolding Layer
@@ -80,7 +80,7 @@ flowchart TD
 
 ## Change Management
 
-- Rule changes are made in `CLAUDE.md` and propagated by scaffold scripts.
+- Rule changes are made in `AGENTS.md` and propagated by scaffold scripts.
 - Version updates in `VERSION` indicate expected downstream impact.
 - Major process changes should be captured as ADRs under `docs/adr/`.
 

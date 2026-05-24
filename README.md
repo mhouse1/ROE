@@ -50,7 +50,7 @@ All documentation lives under `docs/`. Subdirectories are created as needed — 
 | `docs/performance/` | Performance measurements and analysis |
 | `docs/code-review/` | Review cycle records |
 
-Every file in any `docs/` subdirectory gets a zero-padded three-digit prefix (`001-`, `002-`, …). See `CLAUDE.md` for the full numbering and heading format rules.
+Every file in any `docs/` subdirectory gets a zero-padded three-digit prefix (`001-`, `002-`, …). See `AGENTS.md` for the full numbering and heading format rules.
 
 ## Versioning
 
@@ -67,10 +67,10 @@ Rules for AI agents are maintained in one place and referenced by each agent's c
 
 | File | Loaded by |
 |------|-----------|
-| `CLAUDE.md` | Claude Code (source of truth) |
+| `AGENTS.md` | Claude Code / Codex (source of truth) |
 | `.github/copilot-instructions.md` | GitHub Copilot |
 
-When the rules change, update `CLAUDE.md` only.
+When the rules change, update `AGENTS.md` only.
 
 ## Philosophy
 
