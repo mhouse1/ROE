@@ -49,7 +49,6 @@ PROJECT_VERSION="0.0.1"
 printf "%s\n# Initial Version\n" "$PROJECT_VERSION" > "$TARGET_DIR/VERSION"
 
 # --- copy ROE files ---
-cp "$ROE_ROOT/CLAUDE.md"                             "$TARGET_DIR/CLAUDE.md"
 cp "$ROE_ROOT/AGENTS.md"                             "$TARGET_DIR/AGENTS.md"
 # Copy Makefile: keep only the standard commands section, strip the r target,
 # then append a clean custom commands section for the new project.
@@ -101,7 +100,7 @@ _Describe how to get started._
 
 ## docs/
 
-All documentation lives under \`docs/\`. See \`CLAUDE.md\` for numbering and heading format rules.
+All documentation lives under \`docs/\`. See \`AGENTS.md\` for numbering and heading format rules.
 EOF
 
 # --- git init and initial commit ---
