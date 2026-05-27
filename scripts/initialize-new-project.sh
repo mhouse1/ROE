@@ -26,6 +26,7 @@ echo "Creating project '$PROJECT_NAME' at $TARGET_DIR"
 # --- scaffold directories ---
 mkdir -p \
   "$TARGET_DIR/.github" \
+  "$TARGET_DIR/source" \
   "$TARGET_DIR/docs/adr" \
   "$TARGET_DIR/docs/hldd" \
   "$TARGET_DIR/docs/job-aid" \
@@ -39,6 +40,8 @@ mkdir -p \
 for dir in adr hldd job-aid performance code-review roadmap workflow; do
   touch "$TARGET_DIR/docs/$dir/.gitkeep"
 done
+# keep source dir tracked by git
+touch "$TARGET_DIR/source/.gitkeep"
 # keep logs dir tracked by git
 touch "$TARGET_DIR/docs/performance/logs/.gitkeep"
 

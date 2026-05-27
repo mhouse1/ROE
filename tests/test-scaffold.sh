@@ -40,6 +40,13 @@ else
   check "AGENTS.md exists" "file not found"
 fi
 
+# source directory must exist
+if [[ -d "$TARGET_DIR/source" ]]; then
+  check "source/ directory exists" "ok"
+else
+  check "source/ directory exists" "directory not found"
+fi
+
 # ARCHITECTURE.md line count must not exceed 6
 arch_file="$TARGET_DIR/docs/ARCHITECTURE.md"
 arch_lines=$(wc -l < "$arch_file")
