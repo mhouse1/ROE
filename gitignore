@@ -8,6 +8,12 @@ Thumbs.db
 *.swp
 *.swo
 
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
 # Logs
 *.log
 docs/performance/logs/
