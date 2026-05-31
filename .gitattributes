@@ -1,0 +1,5 @@
+# Normalize line endings: store as LF, check out as LF on all platforms
+* text=auto eol=lf
+
+# Ensure Markdown files always use LF (Mermaid parser requires it)
+*.md text eol=lf
