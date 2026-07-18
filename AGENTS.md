@@ -14,6 +14,14 @@ Pragmatic, system-agnostic rules for documentation, code review, and collaborati
 - **System-agnostic:** These rules apply to any type of project or artifact managed in this repository.
 
 
+## Secrets Location
+
+Secrets (Jenkins credentials and other sensitive values) live outside the repository at `../secrets` (a sibling directory of this repo). They are intentionally not tracked in git.
+
+- Reference secrets by that relative path; never copy secret values into this repository, documentation, or commit messages.
+- Never commit anything from `../secrets` — if a rule or script needs a secret, read it from there at runtime.
+
+
 ## Sequential Numbering — All `docs/` Subdirectories
 
 Every file created under any subdirectory of `docs/` must have a zero-padded three-digit prefix:
