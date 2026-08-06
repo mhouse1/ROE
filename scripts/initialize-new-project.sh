@@ -33,11 +33,12 @@ mkdir -p \
   "$TARGET_DIR/docs/performance" \
   "$TARGET_DIR/docs/performance/logs" \
   "$TARGET_DIR/docs/code-review" \
+  "$TARGET_DIR/docs/research" \
   "$TARGET_DIR/docs/roadmap" \
   "$TARGET_DIR/docs/workflow"
 
 # keep empty docs dirs tracked by git
-for dir in adr hldd job-aid performance code-review roadmap workflow; do
+for dir in adr hldd job-aid performance code-review research roadmap workflow; do
   touch "$TARGET_DIR/docs/$dir/.gitkeep"
 done
 # keep source dir tracked by git

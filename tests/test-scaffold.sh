@@ -47,6 +47,13 @@ else
   check "source/ directory exists" "directory not found"
 fi
 
+# docs/research directory must exist and be tracked by git
+if [[ -d "$TARGET_DIR/docs/research" && -f "$TARGET_DIR/docs/research/.gitkeep" ]]; then
+  check "docs/research/ directory exists with .gitkeep" "ok"
+else
+  check "docs/research/ directory exists with .gitkeep" "directory or .gitkeep not found"
+fi
+
 # ARCHITECTURE.md line count must not exceed 6
 arch_file="$TARGET_DIR/docs/ARCHITECTURE.md"
 arch_lines=$(wc -l < "$arch_file")
