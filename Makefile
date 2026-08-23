@@ -11,6 +11,7 @@ SHELL := /bin/bash
 #   n              Stage all and commit with message "new feature"
 #   p [msg]        Stage all, commit (default message: "wip"), and push
 #                    e.g.  make p "fix login bug"
+#   q              Pull the latest changes from the remote
 #   r              Re-initialize project (prompts for name), then runs tests
 #   s              Show git status
 #   squash         Interactive rebase with autosquash against origin/main
@@ -24,7 +25,7 @@ SHELL := /bin/bash
 # Every keystroke saved compounds. Shift is effort. Brevity is the convention.
 # -----------------------------------------------------------------------------
 
-.PHONY: c d f n p r s squash t test
+.PHONY: c d f n p q r s squash t test
 
 c:
 	git add .
@@ -56,6 +57,9 @@ p:
 	git add .
 	git commit -am "$(if $(_P_MSG),$(_P_MSG),wip)"
 	git push
+
+q:
+	git pull
 
 r:
 	@rm -rf tests/test-output
