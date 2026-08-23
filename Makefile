@@ -12,6 +12,7 @@ SHELL := /bin/bash
 #   p [msg]        Stage all, commit (default message: "wip"), and push
 #                    e.g.  make p "fix login bug"
 #   q              Pull the latest changes from the remote
+#   deploy PROJECT  Apply the ROE template to a sibling project without overwriting files
 #   r              Re-initialize project (prompts for name), then runs tests
 #   s              Show git status
 #   squash         Interactive rebase with autosquash against origin/main
@@ -25,7 +26,7 @@ SHELL := /bin/bash
 # Every keystroke saved compounds. Shift is effort. Brevity is the convention.
 # -----------------------------------------------------------------------------
 
-.PHONY: c d f n p q r s squash t test
+.PHONY: c d deploy f n p q r s squash t test
 
 c:
 	git add .
@@ -61,6 +62,17 @@ p:
 q:
 	git pull
 
+ifeq ($(firstword $(MAKECMDGOALS)),deploy)
+  _DEPLOY_PROJECT := $(word 2,$(MAKECMDGOALS))
+  ifneq ($(_DEPLOY_PROJECT),)
+.DEFAULT:
+	@:
+  endif
+endif
+
+deploy:
+	bash scripts/deploy-project.sh "$(_DEPLOY_PROJECT)"
+
 r:
 	@rm -rf tests/test-output
 	@read -p "Project name: " name && bash scripts/initialize-new-project.sh "$${name:-ROE_TEMPLATE_PROJECT}"
@@ -83,3 +95,4 @@ t:
 # -----------------------------------------------------------------------------
 test:
 	bash tests/test-scaffold.sh
+	bash tests/test-deploy.sh
