@@ -146,11 +146,13 @@ After closure:
 
 ## Requirements Documents
 
-Requirements live in `docs/requirements/`. Each file covers a discrete requirement or requirement group for a system, subsystem, or feature.
+Requirements live in `docs/requirements/` and are managed with StrictDoc (ADR 007), pinned to `strictdoc==0.27.1` and invoked via `uvx --from strictdoc==0.27.1` — no project-level Python packaging is required.
 
-Files follow the standard sequential numbering rule: `001-requirement-name.md`, `002-…`, etc.
-
-Use `Draft` status for new requirements; update to `Active` once reviewed and baselined. If a requirement is obsoleted, update the status to `Obsolete` and note the reason — do not delete the file.
+- Each `.sdoc` file covers a discrete requirement group, following the standard sequential numbering rule: `001-group-name.sdoc`, `002-…`, etc.
+- The `.sdoc` file is the source of truth. State the property only (`STATEMENT`); put the "why" in `RATIONALE`, referencing the governing ADR rather than repeating it.
+- Every requirement needing code traceability gets a UID and a matching `@relation(UID, scope=line)` comment on the implementing line in its source file. `scope=file` and `scope=range_start`/`scope=range_end` are also available; there is no `scope=function` for shell or Makefile targets.
+- `make reqs-gate` validates that every relation resolves in both directions (sdoc to source and source to sdoc) and runs inside `make test`. `make reqs` runs the gate, then refreshes the committed `.md` export beside the `.sdoc` source — regenerate it with `make reqs`, never hand-edit the `.md` file.
+- Use `Draft` status inside the `.sdoc` document header for new requirement groups; there is no separate `Active`/`Obsolete` status field on individual `.sdoc` requirements — mark an obsoleted requirement's `STATEMENT` accordingly and note the reason in its `RATIONALE`, rather than deleting it.
 
 
 ## Roadmap — Planned Features

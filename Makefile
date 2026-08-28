@@ -14,10 +14,12 @@ SHELL := /bin/bash
 #   q              Pull the latest changes from the remote
 #   deploy PROJECT  Apply the ROE template to a sibling project without overwriting files
 #   r              Re-initialize project (prompts for name), then runs tests
+#   reqs           Validate docs/requirements/*.sdoc and refresh their markdown export
+#   reqs-gate      Validate docs/requirements/*.sdoc source traceability only
 #   s              Show git status
 #   squash         Interactive rebase with autosquash against origin/main
 #   t              Stage all and commit with message "temporary commit"
-#   test           Run the test suite
+#   test           Run the test suite (includes reqs-gate)
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
@@ -26,7 +28,7 @@ SHELL := /bin/bash
 # Every keystroke saved compounds. Shift is effort. Brevity is the convention.
 # -----------------------------------------------------------------------------
 
-.PHONY: c d deploy f n p q r s squash t test
+.PHONY: c d deploy f n p q r reqs reqs-gate s squash t test
 
 c:
 	git add .
@@ -71,6 +73,7 @@ ifeq ($(firstword $(MAKECMDGOALS)),deploy)
 endif
 
 deploy:
+	@if [[ -d tests/test-output/ROE_TEMPLATE_PROJECT ]]; then :; else $(MAKE) r; fi  # @relation(DEPLOY-002, scope=line)
 	bash scripts/deploy-project.sh "$(_DEPLOY_PROJECT)"
 
 r:
@@ -96,3 +99,16 @@ t:
 test:
 	bash tests/test-scaffold.sh
 	bash tests/test-deploy.sh
+	$(MAKE) reqs-gate
+
+# Validate docs/requirements/*.sdoc and their scripts/*.sh, Makefile source
+# markers resolve in both directions (ADR 007). Pinned to strictdoc==0.27.1
+# via uvx — no project-level Python packaging required.
+reqs-gate:
+	uvx --from strictdoc==0.27.1 strictdoc export . --formats=markdown --output-dir tests/test-output/strictdoc
+	@echo "PASS: requirements + source traceability validated"
+
+# Regenerate the committed markdown export beside the .sdoc sources.
+reqs: reqs-gate
+	cp tests/test-output/strictdoc/markdown/docs/requirements/*.md docs/requirements/
+	@echo "docs/requirements markdown export refreshed"
