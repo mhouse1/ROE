@@ -1,9 +1,15 @@
 
 # ROE — Rules Of Engagement for Development
 
-| Status   | Date       | Project Version |
-|----------|------------|-----------------|
-| Active   | 2026-04-11 | 1.0.0           |
+| Status   | Date       | Revised    | ROE Version |
+|----------|------------|------------|-------------|
+| Active   | 2026-04-11 | 2026-08-30 | 1.1.0       |
+
+**ROE Version** above is the version of *these rules*, not of the project they
+govern. `initialize-new-project.sh` copies this file verbatim, so the number
+travels with the copy — which is the point: it tells you which revision of the
+rules a given project is actually running. Every *other* document in a project
+uses `Project Version`, read from that project's own `VERSION` file.
 
 Pragmatic, system-agnostic rules for documentation, code review, and collaboration. Applies to all work in this repository, whether firmware, hardware, or other systems. All contributors must follow these rules to ensure clarity, traceability, and maintainability.
 
@@ -118,6 +124,28 @@ All new documents (job aids, performance docs, code reviews, ADRs, and any other
 - Use `Draft` for new documents; update to `Active` or `Accepted` once reviewed.
 - **ADRs** must start as `Draft` when first created.
 - Update an ADR to `Accepted` only after implementation is complete.
+
+### Revised documents
+
+A document that is substantively changed in a later session gains a fourth
+column:
+
+```
+| Status | Date       | Revised    | Project Version |
+|--------|------------|------------|-----------------|
+| Draft  | 2026-08-26 | 2026-08-28 | 0.0.1           |
+```
+
+- `Date` is when the document was **created**, and never changes afterwards.
+- `Revised` is the date of the most recent **substantive** change — a new
+  finding, a changed decision, a reworked section. A typo fix is not a revision,
+  and neither is adding this column.
+- **Omit the column entirely until there is a revision to record.** A `Revised`
+  equal to `Date` is noise, and most documents never need it.
+- Work spanning several sessions is the case this exists for. Git history says a
+  file changed; it does not say whether the content changed enough to be worth
+  rereading, and a reader cannot otherwise tell that a document's measurements
+  and its later analysis came from different days.
 
 
 ## Architecture Documents (HLDD)
