@@ -1,11 +1,35 @@
 
 # ROE — Rules Of Engagement for Development
 
-| Status   | Date       | Project Version |
-|----------|------------|-----------------|
-| Active   | 2026-04-11 | 1.0.0           |
+| Status   | Date       | Revised    | ROE Version |
+|----------|------------|------------|-------------|
+| Active   | 2026-04-11 | 2026-08-30 | 1.1.0       |
+
+**ROE Version** above is the version of *these rules*, not of the project they
+govern. `initialize-new-project.sh` copies this file verbatim, so the number
+travels with the copy — which is the point: it tells you which revision of the
+rules a given project is actually running. Every *other* document in a project
+uses `Project Version`, read from that project's own `VERSION` file.
 
 Pragmatic, system-agnostic rules for documentation, code review, and collaboration. Applies to all work in this repository, whether firmware, hardware, or other systems. All contributors must follow these rules to ensure clarity, traceability, and maintainability.
+
+
+## Git — Agents Must Not Commit or Push Without Manual Review
+
+**This rule binds AI agents only.** Human contributors are unaffected — the short commit targets exist precisely so that a person can use them constantly, as `## Project Philosophy` below describes.
+
+**An agent must not run `git commit`, `git push`, `git tag`, `make c`, `make t`, `make n`, `make f`, or `make p` unless the user explicitly asks for that action in the current request.**
+
+Finishing a task means leaving the work in the working tree and reporting what changed. It does not mean committing it. The user reviews every change before it enters history.
+
+- Stage nothing and commit nothing on your own initiative, however small or "obviously correct" the change is.
+- Completing a test run, a green gate, or a fix is **not** authorization to commit.
+- Earlier permission does not carry forward. "Commit this" authorizes that one commit, not the next one.
+- When work is ready, say so and list the changed files. Wait to be asked.
+- If a commit seems warranted, propose it and stop — including the message you would use.
+
+This rule outranks any workflow convenience below, including the short Makefile commit targets documented in `README.md`.
+
 
 ## Project Philosophy
 
@@ -22,6 +46,15 @@ Secrets (Jenkins credentials and other sensitive values) live outside the reposi
 - Never commit anything from `../secrets` — if a rule or script needs a secret, read it from there at runtime.
 
 
+## Command Execution
+
+Always use the project Makefile and bash shell for commands in this repository. The Makefile is the interface to the project — targets encode the correct flags, paths, and ordering, and they stay correct as the project changes.
+
+- Prefer `make <target>` for tests, builds, and project tasks.
+- Use bash as the execution shell for terminal commands.
+- Do not bypass the Makefile with an ad-hoc equivalent when a Makefile target already covers the task.
+
+
 ## Sequential Numbering — All `docs/` Subdirectories
 
 Every file created under any subdirectory of `docs/` must have a zero-padded three-digit prefix:
@@ -33,7 +66,9 @@ Every file created under any subdirectory of `docs/` must have a zero-padded thr
 
 Before creating a new file in any `docs/` subdirectory, use the **Glob tool** to list existing files in that folder — do not use shell commands (PowerShell or Bash), which may return empty results silently on this platform. Find the highest number and increment by 1. Never guess or reuse a number — gaps and collisions break the sequence across sessions.
 
-This applies to: `docs/adr/`, `docs/job-aid/`, `docs/performance/`, `docs/code-review/`, `docs/roadmap/`, and any future subdirectory under `docs/`.
+This applies to: `docs/adr/`, `docs/job-aid/`, `docs/performance/`, `docs/code-review/`, `docs/hldd/`, `docs/requirements/`, `docs/research/`, `docs/roadmap/`, and any future subdirectory under `docs/`.
+
+**Exception:** `docs/assets/` holds templates, images, and other non-sequential support files. Files there are named for what they are, not numbered.
 
 
 ## ADR — Sequential Numbering
@@ -81,7 +116,7 @@ All new documents (job aids, performance docs, code reviews, ADRs, and any other
 
 | Status   | Date       | Project Version |
 |----------|------------|-----------------|
-| Draft    | 2026-04-11 | See Makefile    |
+| Draft    | 2026-04-11 | 1.0.0           |
 ```
 
 - Read the version from the `VERSION` file at the repository root — never guess it.
@@ -89,6 +124,28 @@ All new documents (job aids, performance docs, code reviews, ADRs, and any other
 - Use `Draft` for new documents; update to `Active` or `Accepted` once reviewed.
 - **ADRs** must start as `Draft` when first created.
 - Update an ADR to `Accepted` only after implementation is complete.
+
+### Revised documents
+
+A document that is substantively changed in a later session gains a fourth
+column:
+
+```
+| Status | Date       | Revised    | Project Version |
+|--------|------------|------------|-----------------|
+| Draft  | 2026-08-26 | 2026-08-28 | 0.0.1           |
+```
+
+- `Date` is when the document was **created**, and never changes afterwards.
+- `Revised` is the date of the most recent **substantive** change — a new
+  finding, a changed decision, a reworked section. A typo fix is not a revision,
+  and neither is adding this column.
+- **Omit the column entirely until there is a revision to record.** A `Revised`
+  equal to `Date` is noise, and most documents never need it.
+- Work spanning several sessions is the case this exists for. Git history says a
+  file changed; it does not say whether the content changed enough to be worth
+  rereading, and a reader cannot otherwise tell that a document's measurements
+  and its later analysis came from different days.
 
 
 ## Architecture Documents (HLDD)
@@ -117,11 +174,13 @@ After closure:
 
 ## Requirements Documents
 
-Requirements live in `docs/requirements/`. Each file covers a discrete requirement or requirement group for a system, subsystem, or feature.
+Requirements live in `docs/requirements/` and are managed with StrictDoc (ADR 007), pinned to `strictdoc==0.27.1` and invoked via `uvx --from strictdoc==0.27.1` — no project-level Python packaging is required.
 
-Files follow the standard sequential numbering rule: `001-requirement-name.md`, `002-…`, etc.
-
-Use `Draft` status for new requirements; update to `Active` once reviewed and baselined. If a requirement is obsoleted, update the status to `Obsolete` and note the reason — do not delete the file.
+- Each `.sdoc` file covers a discrete requirement group, following the standard sequential numbering rule: `001-group-name.sdoc`, `002-…`, etc.
+- The `.sdoc` file is the source of truth. State the property only (`STATEMENT`); put the "why" in `RATIONALE`, referencing the governing ADR rather than repeating it.
+- Every requirement needing code traceability gets a UID and a matching `@relation(UID, scope=line)` comment on the implementing line in its source file. `scope=file` and `scope=range_start`/`scope=range_end` are also available; there is no `scope=function` for shell or Makefile targets.
+- `make reqs-gate` validates that every relation resolves in both directions (sdoc to source and source to sdoc) and runs inside `make test`. `make reqs` runs the gate, then refreshes the committed `.md` export beside the `.sdoc` source — regenerate it with `make reqs`, never hand-edit the `.md` file.
+- Use `Draft` status inside the `.sdoc` document header for new requirement groups; there is no separate `Active`/`Obsolete` status field on individual `.sdoc` requirements — mark an obsoleted requirement's `STATEMENT` accordingly and note the reason in its `RATIONALE`, rather than deleting it.
 
 
 ## Roadmap — Planned Features
