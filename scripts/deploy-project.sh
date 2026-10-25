@@ -15,8 +15,8 @@ fi
 PROJECT_NAME="$1"
 TARGET_DIR="$PROJECTS_DIR/$PROJECT_NAME"
 
-if [[ ! -d "$TARGET_DIR" ]]; then  # @relation(DEPLOY-003, scope=line)
-  echo "error: project '$TARGET_DIR' does not exist" >&2
+if [[ "$PROJECT_NAME" == */* || "$PROJECT_NAME" == "." || "$PROJECT_NAME" == ".." ]]; then
+  echo "error: project name '$PROJECT_NAME' must be a plain directory name" >&2
   exit 1
 fi
 
@@ -25,9 +25,14 @@ if [[ ! -d "$TEMPLATE_DIR" ]]; then
   exit 1
 fi
 
+if [[ ! -d "$TARGET_DIR" ]]; then  # @relation(DEPLOY-005, scope=line)
+  echo "Creating '$TARGET_DIR'"
+  mkdir "$TARGET_DIR"
+fi
+
 echo "Applying ROE to '$TARGET_DIR'"
 
-for item in "$TEMPLATE_DIR"/* "$TEMPLATE_DIR"/.[!.]* "$TEMPLATE_DIR"/..?*; do
+for item in "$TEMPLATE_DIR"/* "$TEMPLATE_DIR"/.[!.]* "$TEMPLATE_DIR"/..?*; do  # @relation(DEPLOY-003, scope=line)
   [[ -e "$item" ]] || continue
   [[ "$(basename "$item")" == ".git" ]] && continue
   cp -an "$item" "$TARGET_DIR/"  # @relation(DEPLOY-004, scope=line)

@@ -5,8 +5,9 @@ PREFIX: DEPLOY-
 
 [TEXT]
 STATEMENT: >>>
-Behaviour of `make deploy PROJECT_NAME`, which applies the ROE template to an
-existing sibling project without disturbing that project's own files. ADR 006
+Behaviour of `make deploy PROJECT_NAME`, which applies the ROE template to a
+sibling project, creating it if needed, without disturbing that project's own
+files. ADR 006
 recorded the original decision; these requirements state the properties it
 must hold, checked against scripts/deploy-project.sh and the Makefile on
 every `make test` via `make reqs-gate`.
@@ -66,4 +67,21 @@ SAFETY-tier: deploying into a live sibling project must never destroy that
 project's own work. Implemented with `cp -an` (no-clobber) in
 scripts/deploy-project.sh. Verified by tests/test-deploy.sh, which asserts a
 pre-existing README.md survives deployment unchanged.
+<<<
+
+[REQUIREMENT]
+UID: DEPLOY-005
+TITLE: Deploy creates a missing destination folder
+STATEMENT: >>>
+When the destination sibling directory does not exist, `make deploy
+PROJECT_NAME` shall create it and then copy the full template into it.
+PROJECT_NAME shall be a plain directory name; a name containing `/`, or
+equal to `.` or `..`, shall be rejected.
+<<<
+RATIONALE: >>>
+Requested so a new project can be started with one command, without a
+separate `mkdir`. Revises ADR 006, which originally required the destination
+to exist. The plain-name check keeps creation inside the parent of the ROE
+repository, as DEPLOY-001 requires. Verified by tests/test-deploy.sh, which
+deploys to a sibling name that does not exist yet.
 <<<
