@@ -28,13 +28,13 @@ make r
 
 Prompts for a project name (default `ROE_TEMPLATE_PROJECT`) and generates a fully scaffolded project under `tests/test-output/`, then runs the test suite. The template is a build artifact — `make r` deletes and regenerates `tests/test-output/` each time, so never keep work there.
 
-### Deploy to an existing project
+### Deploy to a project
 
 ```bash
 make deploy PROJECT_NAME
 ```
 
-Copies the template into `../PROJECT_NAME`, a sibling directory of this repository. **Existing files are never overwritten** — only missing files are added, and the template's `.git` directory is excluded. Safe to run against a project that already has history. See [ADR 006](docs/adr/006-deploy-template-to-sibling-project.md).
+Copies the template into `../PROJECT_NAME`, a sibling directory of this repository, creating the directory if it does not exist. **Existing files are never overwritten** — only missing files are added, and the template's `.git` directory is excluded. Safe to run against a project that already has history. See [ADR 006](docs/adr/006-deploy-template-to-sibling-project.md).
 
 If the template does not exist yet, `make deploy` builds it first.
 
