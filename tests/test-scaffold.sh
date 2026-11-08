@@ -63,6 +63,64 @@ else
   check "docs/ARCHITECTURE.md is at most 6 lines" "got $arch_lines lines"
 fi
 
+# Makefile must carry every standard command
+makefile="$TARGET_DIR/Makefile"
+missing=""
+for target in c d f hooks n nb p q s squash t; do
+  grep -q "^$target:" "$makefile" || missing+=" $target"
+done
+if [[ -z "$missing" ]]; then
+  check "Makefile has every standard command" "ok"
+else
+  check "Makefile has every standard command" "missing:$missing"
+fi
+
+# Makefile must not inherit ROE's own targets, which call scripts the project lacks
+leaked=""
+for target in deploy reqs reqs-gate template test; do
+  grep -qE "^$target:|^\.PHONY:.* $target( |\$)" "$makefile" && leaked+=" $target"
+done
+if [[ -z "$leaked" ]]; then
+  check "Makefile has none of ROE's own targets" "ok"
+else
+  check "Makefile has none of ROE's own targets" "found:$leaked"
+fi
+
+# Makefile must parse
+if make -C "$TARGET_DIR" -n s > /dev/null 2>&1; then
+  check "Makefile parses" "ok"
+else
+  check "Makefile parses" "make -n s failed"
+fi
+
+# make nb must refuse a branch name that is also a make target, before git runs
+nb_out=$(make -C "$TARGET_DIR" nb s 2>&1 || true)
+if [[ "$nb_out" == *"is also a make target"* ]]; then
+  check "make nb refuses a name that is a make target" "ok"
+else
+  check "make nb refuses a name that is a make target" "guard did not fire"
+fi
+
+# pre-push hook must ship executable, and pass a project with no test target yet
+hook="$TARGET_DIR/.githooks/pre-push"
+if [[ -x "$hook" ]]; then
+  check ".githooks/pre-push exists and is executable" "ok"
+else
+  check ".githooks/pre-push exists and is executable" "missing or not executable"
+fi
+if (cd "$TARGET_DIR" && "$hook" < /dev/null > /dev/null 2>&1); then
+  check "pre-push passes a project with no test target" "ok"
+else
+  check "pre-push passes a project with no test target" "hook exited non-zero"
+fi
+
+# Claude Code proceed skill must ship (ADR 009)
+if [[ -f "$TARGET_DIR/.claude/skills/proceed/SKILL.md" ]]; then
+  check ".claude/skills/proceed/SKILL.md exists" "ok"
+else
+  check ".claude/skills/proceed/SKILL.md exists" "file not found"
+fi
+
 echo ""
 echo "Results: $pass passed, $fail failed"
 [[ "$fail" -eq 0 ]]

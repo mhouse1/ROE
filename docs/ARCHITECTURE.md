@@ -35,6 +35,8 @@ flowchart LR
 - `AGENTS.md`: Source of truth for process and documentation rules.
 - `.github/copilot-instructions.md`: Points Copilot to `AGENTS.md`.
 - `VERSION`: Semantic version for the ROE framework itself.
+- `.githooks/pre-push`: Opt-in push gate (`make hooks`) that runs `make test`; copied into scaffolded projects.
+- `.claude/skills/proceed/SKILL.md`: Claude Code `/proceed` skill; the one agent-specific behaviour file, by exception (ADR 009).
 
 ### 2) Scaffolding Layer
 

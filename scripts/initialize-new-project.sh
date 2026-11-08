@@ -25,7 +25,9 @@ echo "Creating project '$PROJECT_NAME' at $TARGET_DIR"
 
 # --- scaffold directories ---
 mkdir -p \
+  "$TARGET_DIR/.claude/skills/proceed" \
   "$TARGET_DIR/.github" \
+  "$TARGET_DIR/.githooks" \
   "$TARGET_DIR/source" \
   "$TARGET_DIR/docs/adr" \
   "$TARGET_DIR/docs/hldd" \
@@ -54,18 +56,17 @@ printf "%s\n# Initial Version\n" "$PROJECT_VERSION" > "$TARGET_DIR/VERSION"
 
 # --- copy ROE files ---
 cp "$ROE_ROOT/AGENTS.md"                             "$TARGET_DIR/AGENTS.md"
-# Copy Makefile: keep only the standard commands section, strip the r target,
-# then append a clean custom commands section for the new project.
+# Copy Makefile: keep everything above the custom commands section (the
+# standard commands every project shares; ROE's own targets live below it),
+# holding back the rule line that opens that section, then append a clean
+# custom commands section for the new project.
 awk '
-  /Custom user-defined commands/ { exit }
-  /^r:/                          { skip=1; next }
-  skip && /^\t/                  { next }
-  skip                           { skip=0; next }
-  /^\.PHONY:/                    { gsub(/ r /, " "); gsub(/ test/, "") }
+  /^# Custom user-defined commands/ { exit }
+  held != ""                        { print held; held = "" }
+  /^# -+$/                          { held = $0; next }
   { print }
 ' "$ROE_ROOT/Makefile" > "$TARGET_DIR/Makefile"
 cat >> "$TARGET_DIR/Makefile" <<'MAKEFILE_CUSTOM'
-
 # -----------------------------------------------------------------------------
 # Custom user-defined commands
 # Add your own targets below this line.
@@ -76,6 +77,9 @@ cat >> "$TARGET_DIR/Makefile" <<'MAKEFILE_CUSTOM'
 r:
 	@echo "This is project specific, you'll have to define this yourself"
 MAKEFILE_CUSTOM
+cp "$ROE_ROOT/.githooks/pre-push"                    "$TARGET_DIR/.githooks/pre-push"
+# Claude Code only — an agent-specific exception, see ADR 009
+cp "$ROE_ROOT/.claude/skills/proceed/SKILL.md"       "$TARGET_DIR/.claude/skills/proceed/SKILL.md"
 cp "$ROE_ROOT/gitignore"                             "$TARGET_DIR/.gitignore"
 cp "$ROE_ROOT/.github/copilot-instructions.md"       "$TARGET_DIR/.github/copilot-instructions.md"
 cp "$ROE_ROOT/docs/assets/CONTRIBUTING_generic.md"   "$TARGET_DIR/CONTRIBUTING.md"

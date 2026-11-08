@@ -3,7 +3,7 @@
 
 | Status   | Date       | Revised    | ROE Version |
 |----------|------------|------------|-------------|
-| Active   | 2026-04-11 | 2026-08-30 | 1.1.0       |
+| Active   | 2026-04-11 | 2026-10-25 | 1.2.0       |
 
 **ROE Version** above is the version of *these rules*, not of the project they
 govern. `initialize-new-project.sh` copies this file verbatim, so the number
@@ -53,6 +53,7 @@ Always use the project Makefile and bash shell for commands in this repository. 
 - Prefer `make <target>` for tests, builds, and project tasks.
 - Use bash as the execution shell for terminal commands.
 - Do not bypass the Makefile with an ad-hoc equivalent when a Makefile target already covers the task.
+- Use the tools already installed. Ask before installing a system package or tool the task needs.
 
 
 ## Sequential Numbering — All `docs/` Subdirectories
@@ -64,7 +65,9 @@ Every file created under any subdirectory of `docs/` must have a zero-padded thr
 002-another-document.md
 ```
 
-Before creating a new file in any `docs/` subdirectory, use the **Glob tool** to list existing files in that folder — do not use shell commands (PowerShell or Bash), which may return empty results silently on this platform. Find the highest number and increment by 1. Never guess or reuse a number — gaps and collisions break the sequence across sessions.
+Before creating a new file in any `docs/` subdirectory, list the existing files in that folder, find the highest number, and increment by 1. Never guess or reuse a number — gaps and collisions break the sequence across sessions.
+
+Prefer the **Glob tool**, where the agent has one, over a shell `ls` for this listing. Glob results do not depend on the shell's working directory or on quoting, so the count cannot come back silently wrong. This is the one documented exception to `## Command Execution` above.
 
 This applies to: `docs/adr/`, `docs/job-aid/`, `docs/performance/`, `docs/code-review/`, `docs/hldd/`, `docs/requirements/`, `docs/research/`, `docs/roadmap/`, and any future subdirectory under `docs/`.
 
@@ -73,12 +76,22 @@ This applies to: `docs/adr/`, `docs/job-aid/`, `docs/performance/`, `docs/code-r
 
 ## ADR — Sequential Numbering
 
-The general sequential numbering rule above applies. Additionally: before creating a new ADR, use the **Glob tool** to list the files in `docs/adr/` and find the highest existing number, then increment by 1.
+The general sequential numbering rule above applies. Additionally: before creating a new ADR, list the files in `docs/adr/` (Glob tool preferred, as above) and find the highest existing number, then increment by 1.
 
 
 ## ADR — Performance Changes
 
 Performance ADRs must include actual measured data, not just estimates. Before/after measurements should come directly from real system logs or test results.
+
+
+## ADR — Shape
+
+A new ADR keeps the decision short enough to read on entry. Agents and new contributors read the ADRs before changing anything, so a corpus that outgrows the work it describes costs every session that opens it.
+
+- The decision and its consequences come first, on the first page.
+- Supporting evidence (log excerpts, measurement tables, trial notes) goes in a `docs/research/` or `docs/performance/` document that the ADR links, not in ever-growing ADR sections. `## ADR — Performance Changes` still applies: the ADR quotes the key measurements.
+- Once a decision is live, change it with a superseding ADR rather than appended revisions.
+- Move an ADR to `Accepted` once implementation is complete and the checks showing it works are recorded in the ADR.
 
 
 ## ADR — Superseding Decisions
@@ -148,6 +161,19 @@ column:
   and its later analysis came from different days.
 
 
+## README — Link Every Doc Reference
+
+`README.md` is the project's front door and a hub to the deeper docs. Every reference in it to a document must be a clickable relative link, not plain text or a backticked path.
+
+- Link every citation, not only the first: readers land mid-page. `ADR 012` becomes `[ADR 012](docs/adr/012-short-title.md)`.
+- In a combined citation, link each number: `ADR [004](docs/adr/004-….md)/[007](docs/adr/007-….md)`.
+- A reference to one decision inside an ADR links to the ADR file, with no heading anchor. Anchors break when a heading is reworded.
+- Requirement IDs (`DEPLOY-001`) link to the generated `.md` export in `docs/requirements/`, which renders on GitHub, not to the `.sdoc`.
+- Code and config paths (`Makefile`, `scripts/build.sh`) stay as code formatting; they are not docs.
+
+After editing `README.md`, check that every link resolves to a file that exists.
+
+
 ## Architecture Documents (HLDD)
 
 Architecture documents live in `docs/hldd/`. Each file covers the high-level design for a system, subsystem, or feature.
@@ -178,8 +204,11 @@ Requirements live in `docs/requirements/` and are managed with StrictDoc (ADR 00
 
 - Each `.sdoc` file covers a discrete requirement group, following the standard sequential numbering rule: `001-group-name.sdoc`, `002-…`, etc.
 - The `.sdoc` file is the source of truth. State the property only (`STATEMENT`); put the "why" in `RATIONALE`, referencing the governing ADR rather than repeating it.
+- Identity lives in the `UID` and `PREFIX` fields, not the filename — renumbering a file does not renumber its requirements.
+- Tunable values (thresholds, timeouts, sizes) live in the project's configuration, never in a requirement statement.
 - Every requirement needing code traceability gets a UID and a matching `@relation(UID, scope=line)` comment on the implementing line in its source file. `scope=file` and `scope=range_start`/`scope=range_end` are also available; there is no `scope=function` for shell or Makefile targets.
 - `make reqs-gate` validates that every relation resolves in both directions (sdoc to source and source to sdoc) and runs inside `make test`. `make reqs` runs the gate, then refreshes the committed `.md` export beside the `.sdoc` source — regenerate it with `make reqs`, never hand-edit the `.md` file.
+- The generated `.md` exports are the documented exception to `## Document Heading Format` — StrictDoc controls their layout, so they carry no status table.
 - Use `Draft` status inside the `.sdoc` document header for new requirement groups; there is no separate `Active`/`Obsolete` status field on individual `.sdoc` requirements — mark an obsoleted requirement's `STATEMENT` accordingly and note the reason in its `RATIONALE`, rather than deleting it.
 
 

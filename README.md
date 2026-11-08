@@ -2,7 +2,7 @@
 
 | Status | Date       | Revised    | ROE Version |
 |--------|------------|------------|-------------|
-| Active | 2026-04-12 | 2026-09-08 | 1.1.0       |
+| Active | 2026-04-12 | 2026-10-25 | 1.2.0       |
 
 Pragmatic, system-agnostic rules for documentation, code review, and AI-assisted collaboration. Apply this framework to any project — firmware, hardware, software, or otherwise.
 
@@ -36,7 +36,7 @@ make deploy PROJECT_NAME
 
 Copies the template into `../PROJECT_NAME`, a sibling directory of this repository, creating the directory if it does not exist. **Existing files are never overwritten** — only missing files are added, and the template's `.git` directory is excluded. Safe to run against a project that already has history. See [ADR 006](docs/adr/006-deploy-template-to-sibling-project.md).
 
-If the template does not exist yet, `make deploy` builds it first.
+`make deploy` rebuilds the template from the current checkout first, so a deploy always ships the rules and Makefile ROE holds now. See [ADR 008](docs/adr/008-adopt-wingman-workflow-improvements.md) and [DEPLOY-002](docs/requirements/001-deploy.md).
 
 ### Prerequisites
 
@@ -51,20 +51,25 @@ Commands are intentionally short — you will type them constantly.
 |---------|-------------|
 | `make s` | `git status` |
 | `make d` | `git diff` |
-| `make q` | `git pull` |
+| `make q` | `git pull`, or `git pull origin main` on a branch not yet pushed |
+| `make nb <name>` | Start a new branch from `origin/main`, with no upstream until its first push |
 | `make c` | Stage all and commit as "clean up" |
 | `make t` | Stage all and commit as "temporary commit" |
 | `make n` | Stage all and commit as "new feature" |
 | `make f` | Stage all and commit as a fixup for HEAD |
 | `make p [msg]` | Stage all, commit (default message "wip"), and push |
 | `make squash` | Interactive rebase with autosquash against `origin/main` |
+| `make hooks` | Opt in to the pre-push hook, which runs `make test` before every push |
 | `make r` | Rebuild the template project (prompts for name), then run tests |
+| `make template` | Rebuild the template project from this checkout, without prompting |
 | `make deploy PROJECT` | Apply the template to a sibling project without overwriting files |
-| `make test` | Run the full test suite (scaffold, deploy, requirements gate) |
+| `make test` | Rebuild the template, run every `tests/test-*.sh`, then the requirements gate |
 | `make reqs-gate` | Validate requirement-to-source traceability |
 | `make reqs` | Run the gate, then refresh the committed requirements export |
 
-`make p` takes an optional message: `make p "fix login bug"`.
+`make p` takes an optional message: `make p "fix login bug"`. `make nb` takes a branch name, `make nb login-fix`, and refuses one that is also a make target, since that target would run next. `git push --no-verify` skips the pre-push hook for one push.
+
+Scaffolded projects get the commands from `make s` through `make hooks`, plus an empty `make r` to define for themselves. The rest are ROE's own.
 
 ## docs/ Structure
 
@@ -82,7 +87,7 @@ All documentation lives under `docs/`. Subdirectories are created as needed — 
 | `docs/code-review/` | Review cycle records |
 | `docs/workflow/` | Process and workflow documentation |
 
-`docs/ARCHITECTURE.md` sits at the top level of `docs/` and is the only uppercase name — deliberate emphasis, per [ADR 001](docs/adr/001-lowercase-folder-names.md).
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) sits at the top level of `docs/` and is the only uppercase name — deliberate emphasis, per [ADR 001](docs/adr/001-lowercase-folder-names.md).
 
 Every file in any `docs/` subdirectory gets a zero-padded three-digit prefix (`001-`, `002-`, …) and opens with a title and status table. See [AGENTS.md](AGENTS.md) for the full numbering and heading format rules.
 
@@ -103,7 +108,7 @@ Requirements are managed with [StrictDoc](https://strictdoc.readthedocs.io/), pi
 
 `VERSION` follows semantic versioning: bump **patch** for clarifications, **minor** for new rules or scaffold additions, **major** for breaking changes to the rules structure.
 
-The version in the `AGENTS.md` header is the version of *the rules*, not of the project they govern. It travels with the file when a project is scaffolded, so any project can report which revision of ROE it inherited.
+The version in the [AGENTS.md](AGENTS.md) header is the version of *the rules*, not of the project they govern. It travels with the file when a project is scaffolded, so any project can report which revision of ROE it inherited.
 
 ## AI Assistant Integration
 
@@ -111,17 +116,20 @@ Rules for AI agents are maintained in one place and referenced by each agent's c
 
 | File | Loaded by |
 |------|-----------|
-| `AGENTS.md` | Canonical policy — read by Copilot, Claude Code, Codex |
-| `.github/copilot-instructions.md` | GitHub Copilot (points to `AGENTS.md`) |
+| [AGENTS.md](AGENTS.md) | Canonical policy — read by Copilot, Claude Code, Codex |
+| [.github/copilot-instructions.md](.github/copilot-instructions.md) | GitHub Copilot (points to [AGENTS.md](AGENTS.md)) |
+| [.claude/skills/proceed/SKILL.md](.claude/skills/proceed/SKILL.md) | Claude Code only: the `/proceed` skill, an agent-specific exception ([ADR 009](docs/adr/009-claude-code-proceed-skill-agent-specific-exception.md)) |
 
-When the rules change, update `AGENTS.md` only. See [ADR 004](docs/adr/004-copilot-pro-plus-agents-md-canonical.md).
+When the rules change, update [AGENTS.md](AGENTS.md) only. See [ADR 004](docs/adr/004-copilot-pro-plus-agents-md-canonical.md).
 
 ## Repository Layout
 
 | Path | Contents |
 |------|----------|
-| `AGENTS.md` | The rules — canonical source of truth |
+| [AGENTS.md](AGENTS.md) | The rules — canonical source of truth |
 | `Makefile` | Command interface |
+| `.githooks/` | Opt-in pre-push hook (`make hooks`), copied into scaffolded projects |
+| `.claude/skills/` | Claude Code skills, copied into scaffolded projects |
 | `scripts/` | Scaffold and deployment scripts |
 | `tests/` | Test suite; `tests/test-output/` holds the generated template |
 | `docs/` | ROE's own documentation, following its own rules |

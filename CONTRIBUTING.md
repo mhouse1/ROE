@@ -1,8 +1,8 @@
 # Contributing to ROE
 
-| Status | Date       | Project Version |
-|--------|------------|-----------------|
-| Active | 2026-04-11 | —               |
+| Status | Date       | Revised    | Project Version |
+|--------|------------|------------|-----------------|
+| Active | 2026-04-11 | 2026-10-25 | —               |
 
 Practical guide for working on the ROE project itself.
 
@@ -28,8 +28,11 @@ Agent-specific instruction files live alongside their tooling:
 |-------|------|
 | Claude Code / Codex | `AGENTS.md` |
 | GitHub Copilot | `.github/copilot-instructions.md` |
+| Claude Code (skill) | `.claude/skills/proceed/SKILL.md` — exception, [ADR 009](docs/adr/009-claude-code-proceed-skill-agent-specific-exception.md) |
 
 New integrations follow the same pattern: a thin file that summarises the key rules and points to `AGENTS.md` as the source of truth. Do not duplicate rule content — only summarise and link.
+
+Agent-specific *behaviour* beyond a pointer file, such as a Claude Code skill, is an exception that needs its own ADR until per-agent configuration exists ([Roadmap 006](docs/roadmap/006-agent-specific-configuration.md)).
 
 ---
 
