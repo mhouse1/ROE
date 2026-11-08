@@ -16,3 +16,6 @@ tests/test-output/
 
 # Local-only documents
 ignore/
+
+# Python bytecode
+__pycache__/

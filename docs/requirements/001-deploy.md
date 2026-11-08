@@ -22,17 +22,19 @@ root) and shall copy the ROE template into that directory.
 the invocation ROE deploy is built around. Implemented by the PROJECTS_DIR
 and TARGET_DIR resolution in scripts/deploy-project.sh.
 
-## Deploy is automated when the template has not been generated
+## Deploy ships a template built from the current checkout
 
 **UID**: DEPLOY-002
 
-**Statement**: `make deploy` shall not require a separate manual step to generate the ROE
-template first: when tests/test-output/ROE_TEMPLATE_PROJECT does not already
-exist, `make deploy` shall run `make r` itself before deploying.
+**Statement**: `make deploy` shall regenerate tests/test-output/ROE_TEMPLATE_PROJECT from
+the current checkout before every deployment, without a separate manual step
+and without prompting.
 
-**Rationale**: Requested so a first-time `make deploy` on a clean checkout does not fail
-with a missing-template error. Implemented in the Makefile `deploy` target's
-existence check ahead of scripts/deploy-project.sh.
+**Rationale**: ADR 008. The original statement rebuilt the template only when it was
+missing, so a template left by an earlier `make r` was deployed as-is: on
+2026-10-25 that was ROE 1.0.0 from 2026-07-18. Implemented by the Makefile
+`deploy` target's `template` prerequisite, ahead of
+scripts/deploy-project.sh.
 
 ## Deploy supports an empty destination folder
 

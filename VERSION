@@ -1,2 +1,2 @@
-1.1.0
-Adds the Revised document field to the heading format
+1.2.0
+Adds make nb, the opt-in pre-push hook, the proceed skill (ADR 009), and the ADR-shape, README-link and requirements-export rules

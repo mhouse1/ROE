@@ -50,6 +50,8 @@ The `scripts/apply-to-existing-project.sh` script is in progress (see inline com
 |--------|-------------|
 | `make s` | `git status` |
 | `make d` | `git diff` (unstaged) |
+| `make q` | `git pull` (`origin main` on a branch not yet pushed) |
+| `make nb <name>` | New branch from `origin/main` — run after a PR is merged |
 | `make c` | Stage all + commit `"clean up"` |
 | `make n` | Stage all + commit `"new feature"` |
 | `make t` | Stage all + commit `"temporary commit"` |
@@ -57,7 +59,8 @@ The `scripts/apply-to-existing-project.sh` script is in progress (see inline com
 | `make p` | Stage all + commit `"wip"` + push |
 | `make p "message"` | Stage all + commit with custom message + push |
 | `make squash` | Interactive rebase with autosquash against `origin/main` |
-| `make test` | Run `tests/test-scaffold.sh` |
+| `make hooks` | Opt in to the pre-push hook (`make test` before every push) |
+| `make test` | ROE only: rebuild the template, run every `tests/test-*.sh`, then the requirements gate |
 | `make r` | Re-initialize project (prompts for name), then runs tests |
 
 ---

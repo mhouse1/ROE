@@ -7,7 +7,9 @@ Key areas covered:
 - Git — agents must not commit or push without an explicit user request
 - Command execution through the Makefile
 - Sequential numbering for all files under `docs/`
-- ADR authoring rules (numbering, performance data, superseding)
+- ADR authoring rules (numbering, performance data, shape, superseding)
 - Diagram format (Mermaid only)
 - Document heading format (title + status table)
+- README doc references are clickable links
+- Requirements (StrictDoc `.sdoc` source, generated `.md` export)
 - Code review file conventions
